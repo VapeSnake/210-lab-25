@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm> // for sort function for vector.
 #include <list>
 #include <set>
 #include <fstream>
@@ -56,11 +57,21 @@ int main() {
     int vecSortDuration;
     int listSortDuration;
     int setSortDuration;
-
+// Sort the vector using algorithm header since <vector> does not have a sort method built-in.
     auto sortStart = high_resolution_clock::now(); // Need different variables for each race to avoid confusion.
-    sort(v.begin(), v.end()); // Sort the vector using the built-in sort function
+    sort(v.begin(), v.end());
     auto sortEnd = high_resolution_clock::now();
     vecSortDuration = duration_cast<nanoseconds>(sortEnd - sortStart).count();
+// Sort the list using its built-in sort method.
+    auto sortStart = high_resolution_clock::now();
+    l.sort(); // Sort the list using its built-in sort method.
+    auto sortEnd = high_resolution_clock::now();
+    listSortDuration = duration_cast<nanoseconds>(sortEnd - sortStart).count();
+// Set are automatically sorted.
+    setSortDuration = -1; // Set to -1 since it is already sorted.
+
+    
+
 
 
     return 0;

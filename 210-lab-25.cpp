@@ -35,13 +35,33 @@ int main() {
     // This will be done between each container in each race.
     inFile.clear(); // Clear the EOF flag
     inFile.seekg(0); // Move the file pointer back to the beginning
+
     start = high_resolution_clock::now(); // Starts the timer for reading into list
     while (inFile >> word) {
         l.push_back(word);
     }
     end = high_resolution_clock::now();
     listReadDuration = duration_cast<nanoseconds>(end - start).count();
-    inFile.clear(); // Clear the EOF flag
+    inFile.clear();
+    inFile.seekg(0);
+
+    start = high_resolution_clock::now(); // Starts the timer for reading into set
+    while (inFile >> word) {
+        s.insert(word);
+    }
+    end = high_resolution_clock::now();
+    setReadDuration = duration_cast<nanoseconds>(end - start).count();
+    inFile.close(); // End of reading race between containers. May consider making functions for scalability.
+// Begin sorting race.
+    int vecSortDuration;
+    int listSortDuration;
+    int setSortDuration;
+
+    auto sortStart = high_resolution_clock::now(); // Need different variables for each race to avoid confusion.
+    sort(v.begin(), v.end()); // Sort the vector using the built-in sort function
+    auto sortEnd = high_resolution_clock::now();
+    vecSortDuration = duration_cast<nanoseconds>(sortEnd - sortStart).count();
+
 
     return 0;
 }

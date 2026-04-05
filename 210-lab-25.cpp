@@ -9,8 +9,6 @@
 using namespace std;
 using namespace std::chrono;
 
-const int MAXSIZE = 20000;
-
 int main() {
     vector<string> v;
     list<string> l;
@@ -25,7 +23,7 @@ int main() {
         cerr << "Unable to open file words.txt" << endl;
         return 1;
     }
-    // read words into vector and list, and time the operations, making sure to reset the file pointer back to the beginning of file.
+// read words into vector and list, and time the operations, making sure to reset the file pointer back to the beginning of file.
     string word;
     auto start = high_resolution_clock::now(); // Starts the timer for reading into vector
     while (inFile >> word) {
@@ -69,8 +67,23 @@ int main() {
     listSortDuration = duration_cast<nanoseconds>(sortEnd - sortStart).count();
 // Set are automatically sorted.
     setSortDuration = -1; // Set to -1 since it is already sorted.
+//Bdgin race for inserting "TESTCODE" in middle of each container, or into set.
+    int vecInsertDuration;
+    int listInsertDuration;
+    int setInsertDuration;
+// Insert "TESTCODE" into middle of vector using insert method.
+    auto insertStart = high_resolution_clock::now();
+    v.insert(v.begin() + v.size() / 2, "TESTCODE"); // Middle is found by dividing vector.size by 2. Pretty fast.
+    auto insertEnd = high_resolution_clock::now();
+    vecInsertDuration = duration_cast<nanoseconds>(insertEnd - insertStart).count();
+// Insert "TESTCODE" into middle of list using insert method. Need to use an iterator to find the middle of the list.
+    auto insertStart = high_resolution_clock::now();
+    auto it = l.begin();
+    advance(it, l.size() / 2); // Move the iterator to the middle of the list. Slower since it moves from beginning to middle.
+    l.insert(it, "TESTCODE");
+    auto insertEnd = high_resolution_clock::now();
+    listInsertDuration = duration_cast<nanoseconds>(insertEnd - insertStart).count();
 
-    
 
 
 

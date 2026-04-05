@@ -83,6 +83,33 @@ int main() {
     l.insert(it, "TESTCODE");
     auto insertEnd = high_resolution_clock::now();
     listInsertDuration = duration_cast<nanoseconds>(insertEnd - insertStart).count();
+// Insert "TESTCODE" into set using insert method. Set will automatically place it in the correct position.
+    auto insertStart = high_resolution_clock::now();
+    s.insert("TESTCODE");
+    auto insertEnd = high_resolution_clock::now();
+    setInsertDuration = duration_cast<nanoseconds>(insertEnd - insertStart).count();
+// Begin race for deleting middle element from each container.
+    int vecDeleteDuration;
+    int listDeleteDuration;
+    int setDeleteDuration;
+// Delete middle element from vector using erase method.
+    auto deleteStart = high_resolution_clock::now();
+    v.erase(v.begin() + v.size() / 2); // Same method as insert but deleting instead. Still pretty fast.
+    auto deleteEnd = high_resolution_clock::now();
+    vecDeleteDuration = duration_cast<nanoseconds>(deleteEnd - deleteStart).count();
+// Delete middle element from list using erase method. Need to use an iterator to find the middle of the list.
+    auto deleteStart = high_resolution_clock::now();
+    auto it = l.begin();
+    advance(it, l.size() / 2); // Move the iterator to the middle of list to delete middle element.
+    l.erase(it);
+    auto deleteEnd = high_resolution_clock::now();
+// Delete middle element from set using erase method. Set will automatically find the middle element since it is sorted.
+    auto deleteStart = high_resolution_clock::now();
+    auto it = s.begin();
+    advance(it, s.size() / 2); // Move the iterator to the middle of set to delete middle element.
+    s.erase(it);
+    auto deleteEnd = high_resolution_clock::now();
+    setDeleteDuration = duration_cast<nanoseconds>(deleteEnd - deleteStart).count();
 
 
 

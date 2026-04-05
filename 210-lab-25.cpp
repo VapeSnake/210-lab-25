@@ -34,7 +34,7 @@ int main() {
     // This will be done between each container in each race.
     inFile.clear(); // Clear the EOF flag
     inFile.seekg(0); // Move the file pointer back to the beginning
-
+/
     start = high_resolution_clock::now(); // Starts the timer for reading into list
     while (inFile >> word) {
         l.push_back(word);

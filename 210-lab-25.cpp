@@ -9,53 +9,33 @@
 using namespace std;
 using namespace std::chrono;
 
+// Functions to help clean space in main.
+int vecRead(vector <string> &v);
+int listRead(list <string> &l);
+int setRead(set <string> &s);
+int vecSort(vector <string> &v);
+int listSort(list <string> &l);
+int setSort(set <string> &s);
+int vecInsert();
+int listInsert();
+int setInsert();
+int vecDelete();
+int listDelete();
+int setDelete();
+
 int main() {
     vector < string > v;
     list < string > l;
     set < string > s;
 
-    int vecReadDuration;
-    int listReadDuration;
-    int setReadDuration;
-
-    ifstream inFile("codes.txt");
-    if (!inFile) { // check if file opened successfully
-        cerr << "Unable to open file codes.txt" << endl;
-        return 1;
-    }
-    // read words into vector and list, and time the operations, making sure to reset the file pointer back to the beginning of file.
-    string word;
-    auto start = high_resolution_clock::now(); // Starts the timer for reading into vector
-    while (inFile >> word) {
-        v.push_back(word);
-    }
-    auto end = high_resolution_clock::now();
-    vecReadDuration = duration_cast < nanoseconds > (end - start).count();
-    // This will be done between each container in each race.
-    inFile.clear(); // Clear the EOF flag
-    inFile.seekg(0); // Move the file pointer back to the beginning
-/
-    start = high_resolution_clock::now(); // Starts the timer for reading into list
-    while (inFile >> word) {
-        l.push_back(word);
-    }
-    end = high_resolution_clock::now();
-    listReadDuration = duration_cast < nanoseconds > (end - start).count();
-    inFile.clear();
-    inFile.seekg(0);
-
-    start = high_resolution_clock::now(); // Starts the timer for reading into set
-    while (inFile >> word) {
-        s.insert(word);
-    }
-    end = high_resolution_clock::now();
-    setReadDuration = duration_cast < nanoseconds > (end - start).count();
-    inFile.close(); // End of reading race between containers. May consider making functions for scalability.
-    // Begin sorting race.
+    int vecReadDuration = vecRead(v);
+    int listReadDuration = listRead(l);
+    int setReadDuration = setRead(s);
+// Begin sorting race.
     int vecSortDuration;
     int listSortDuration;
     int setSortDuration;
-    // Sort the vector using algorithm header since <vector> does not have a sort method built-in.
+// Sort the vector using algorithm header since <vector> does not have a sort method built-in.
     auto sortStart = high_resolution_clock::now(); // Need different variables for each race to avoid confusion.
     sort(v.begin(), v.end());
     auto sortEnd = high_resolution_clock::now();
@@ -119,6 +99,71 @@ int main() {
     cout << left << setw(20) << "Delete" << setw(20) << vecDeleteDuration << setw(20) << listDeleteDuration << setw(20) << setDeleteDuration << endl;
 
     return 0;
+}
+// This will also cut out need for resetting EOF flag and resetting file pointer to beginning of file.
+int vecRead(vector <string> &v) {
+    // Function to read words into vector and time the operation. Will be used in main for scalability.
+   ifstream inFile("codes.txt");
+    if (!inFile) { // check if file opened successfully
+        cerr << "Unable to open file codes.txt" << endl;
+        return 1;
+    }
+    // read words into vector and list, and time the operations, making sure to reset the file pointer back to the beginning of file.
+    string word;
+    auto start = high_resolution_clock::now(); // Starts the timer for reading into vector
+    while (inFile >> word) {
+        v.push_back(word);
+    }
+    auto end = high_resolution_clock::now();
+    int time = duration_cast < nanoseconds > (end - start).count();
+    inFile.close();
+    return time;
+}
+
+int listRead(list <string> &l) {
+    // Function to read words into list and time the operation. Will be used in main for scalability.
+   ifstream inFile("codes.txt");
+    if (!inFile) { // check if file opened successfully
+        cerr << "Unable to open file codes.txt" << endl;
+        return 1;
+    }
+    // read words into vector and list, and time the operations, making sure to reset the file pointer back to the beginning of file.
+    string word;
+    auto start = high_resolution_clock::now(); // Starts the timer for reading into list
+    while (inFile >> word) {
+        l.push_back(word);
+    }
+    auto end = high_resolution_clock::now();
+    int time = duration_cast < nanoseconds > (end - start).count();
+    inFile.close();
+    return time;
+}
+
+int setRead(set <string> &s) {
+    // Function to read words into set and time the operation. Will be used in main for scalability.
+   ifstream inFile("codes.txt");
+    if (!inFile) { // check if file opened successfully
+        cerr << "Unable to open file codes.txt" << endl;
+        return 1;
+    }
+    // read words into vector and set, and time the operations, making sure to reset the file pointer back to the beginning of file.
+    string word;
+    auto start = high_resolution_clock::now(); // Starts the timer for reading into set
+    while (inFile >> word) {
+        s.insert(word);
+    }
+    auto end = high_resolution_clock::now();
+    int time = duration_cast < nanoseconds > (end - start).count();
+    inFile.close();
+    return time;
+}
+
+int vecSort(vector <string> &v) {
+    auto start = high_resolution_clock::now(); // Starts the timer for sorting vector
+    sort(v.begin(), v.end());
+    auto end = high_resolution_clock::now();
+    int time = duration_cast < nanoseconds > (end - start).count();
+    return time;
 }
 
 /* syntax examples:

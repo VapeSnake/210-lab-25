@@ -61,13 +61,13 @@ int main() {
     auto sortEnd = high_resolution_clock::now();
     vecSortDuration = duration_cast<nanoseconds>(sortEnd - sortStart).count();
 // Sort the list using its built-in sort method.
-    auto sortStart = high_resolution_clock::now();
+    sortStart = high_resolution_clock::now();
     l.sort(); // Sort the list using its built-in sort method.
-    auto sortEnd = high_resolution_clock::now();
+    sortEnd = high_resolution_clock::now();
     listSortDuration = duration_cast<nanoseconds>(sortEnd - sortStart).count();
 // Set are automatically sorted.
     setSortDuration = -1; // Set to -1 since it is already sorted.
-//Bdgin race for inserting "TESTCODE" in middle of each container, or into set.
+//Begin race for inserting "TESTCODE" in middle of each container, or into set.
     int vecInsertDuration;
     int listInsertDuration;
     int setInsertDuration;
@@ -77,16 +77,16 @@ int main() {
     auto insertEnd = high_resolution_clock::now();
     vecInsertDuration = duration_cast<nanoseconds>(insertEnd - insertStart).count();
 // Insert "TESTCODE" into middle of list using insert method. Need to use an iterator to find the middle of the list.
-    auto insertStart = high_resolution_clock::now();
-    auto it = l.begin();
-    advance(it, l.size() / 2); // Move the iterator to the middle of the list. Slower since it moves from beginning to middle.
-    l.insert(it, "TESTCODE");
-    auto insertEnd = high_resolution_clock::now();
+    insertStart = high_resolution_clock::now();
+    auto it_list = l.begin();
+    advance(it_list, l.size() / 2); // Move the iterator to the middle of the list. Slower since it moves from beginning to middle.
+    l.insert(it_list, "TESTCODE");
+    insertEnd = high_resolution_clock::now();
     listInsertDuration = duration_cast<nanoseconds>(insertEnd - insertStart).count();
 // Insert "TESTCODE" into set using insert method. Set will automatically place it in the correct position.
-    auto insertStart = high_resolution_clock::now();
+    insertStart = high_resolution_clock::now();
     s.insert("TESTCODE");
-    auto insertEnd = high_resolution_clock::now();
+    insertEnd = high_resolution_clock::now();
     setInsertDuration = duration_cast<nanoseconds>(insertEnd - insertStart).count();
 // Begin race for deleting middle element from each container.
     int vecDeleteDuration;
@@ -98,17 +98,18 @@ int main() {
     auto deleteEnd = high_resolution_clock::now();
     vecDeleteDuration = duration_cast<nanoseconds>(deleteEnd - deleteStart).count();
 // Delete middle element from list using erase method. Need to use an iterator to find the middle of the list.
-    auto deleteStart = high_resolution_clock::now();
-    auto it = l.begin();
-    advance(it, l.size() / 2); // Move the iterator to the middle of list to delete middle element.
-    l.erase(it);
-    auto deleteEnd = high_resolution_clock::now();
-// Delete middle element from set using erase method. Set will automatically find the middle element since it is sorted.
-    auto deleteStart = high_resolution_clock::now();
-    auto it = s.begin();
-    advance(it, s.size() / 2); // Move the iterator to the middle of set to delete middle element.
-    s.erase(it);
-    auto deleteEnd = high_resolution_clock::now();
+    deleteStart = high_resolution_clock::now();
+    it_list = l.begin();
+    advance(it_list, l.size() / 2); // Move the iterator to the middle of list to delete middle element.
+    l.erase(it_list);
+    deleteEnd = high_resolution_clock::now();
+    listDeleteDuration = duration_cast<nanoseconds>(deleteEnd - deleteStart).count();
+// Delete middle element from set using erase method.
+    deleteStart = high_resolution_clock::now();
+    auto it_set = s.begin();
+    advance(it_set, s.size() / 2); // Move the iterator to the middle of set to delete middle element.
+    s.erase(it_set);
+    deleteEnd = high_resolution_clock::now();
     setDeleteDuration = duration_cast<nanoseconds>(deleteEnd - deleteStart).count();
 
 

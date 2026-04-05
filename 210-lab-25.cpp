@@ -15,13 +15,12 @@ int listRead(list <string> &l);
 int setRead(set <string> &s);
 int vecSort(vector <string> &v);
 int listSort(list <string> &l);
-int setSort(set <string> &s);
-int vecInsert();
-int listInsert();
-int setInsert();
-int vecDelete();
-int listDelete();
-int setDelete();
+int vecInsert(vector <string> &v, string word); // Now functions can insert any string as testcode.
+int listInsert(list <string> &l, string word);
+int setInsert(set <string> &s, string word);
+int vecDelete(vector <string> &v, string word);
+int listDelete(list <string> &l, string word);
+int setDelete(set <string> &s, string word);
 
 int main() {
     vector < string > v;
@@ -32,43 +31,15 @@ int main() {
     int listReadDuration = listRead(l);
     int setReadDuration = setRead(s);
 // Begin sorting race.
-    int vecSortDuration;
-    int listSortDuration;
-    int setSortDuration;
-// Sort the vector using algorithm header since <vector> does not have a sort method built-in.
-    auto sortStart = high_resolution_clock::now(); // Need different variables for each race to avoid confusion.
-    sort(v.begin(), v.end());
-    auto sortEnd = high_resolution_clock::now();
-    vecSortDuration = duration_cast < nanoseconds > (sortEnd - sortStart).count();
-    // Sort the list using its built-in sort method.
-    sortStart = high_resolution_clock::now();
-    l.sort(); // Sort the list using its built-in sort method.
-    sortEnd = high_resolution_clock::now();
-    listSortDuration = duration_cast < nanoseconds > (sortEnd - sortStart).count();
-    // Set are automatically sorted.
-    setSortDuration = -1; // Set to -1 since it is already sorted.
-    //Begin race for inserting "TESTCODE" in middle of each container, or into set.
-    int vecInsertDuration;
-    int listInsertDuration;
-    int setInsertDuration;
-    // Insert "TESTCODE" into middle of vector using insert method.
-    auto insertStart = high_resolution_clock::now();
-    v.insert(v.begin() + v.size() / 2, "TESTCODE"); // Middle is found by dividing vector.size by 2. Pretty fast.
-    auto insertEnd = high_resolution_clock::now();
-    vecInsertDuration = duration_cast < nanoseconds > (insertEnd - insertStart).count();
-    // Insert "TESTCODE" into middle of list using insert method. Need to use an iterator to find the middle of the list.
-    insertStart = high_resolution_clock::now();
-    auto it_list = l.begin();
-    advance(it_list, l.size() / 2); // Move the iterator to the middle of the list. Slower since it moves from beginning to middle.
-    l.insert(it_list, "TESTCODE");
-    insertEnd = high_resolution_clock::now();
-    listInsertDuration = duration_cast < nanoseconds > (insertEnd - insertStart).count();
-    // Insert "TESTCODE" into set using insert method. Set will automatically place it in the correct position.
-    insertStart = high_resolution_clock::now();
-    s.insert("TESTCODE");
-    insertEnd = high_resolution_clock::now();
-    setInsertDuration = duration_cast < nanoseconds > (insertEnd - insertStart).count();
-    // Begin race for deleting middle element from each container.
+    int vecSortDuration = vecSort(v);
+    int listSortDuration = listSort(l);
+    int setSortDuration = -1; // Set is already sorted, set as -1.
+//Begin race for inserting "TESTCODE" in middle of each container, or into set.
+
+    int vecInsertDuration = vecInsert(v, "TESTCODE");
+    int listInsertDuration = listInsert(l, "TESTCODE");
+    int setInsertDuration = setInsert(s, "TESTCODE");
+// Begin race for deleting middle element from each container.
     int vecDeleteDuration;
     int listDeleteDuration;
     int setDeleteDuration;
@@ -116,8 +87,8 @@ int vecRead(vector <string> &v) {
     }
     auto end = high_resolution_clock::now();
     int time = duration_cast < nanoseconds > (end - start).count();
-    inFile.close();
-    return time;
+    inFile.close(); // Close the file after reading. Good habit, but files close once function ends anyways.
+    return time; // Returns time taken to read into vector.
 }
 
 int listRead(list <string> &l) {
@@ -150,7 +121,7 @@ int setRead(set <string> &s) {
     string word;
     auto start = high_resolution_clock::now(); // Starts the timer for reading into set
     while (inFile >> word) {
-        s.insert(word);
+        s.insert(word); // Insert function for set will automatically place string in right place.
     }
     auto end = high_resolution_clock::now();
     int time = duration_cast < nanoseconds > (end - start).count();
@@ -160,7 +131,41 @@ int setRead(set <string> &s) {
 
 int vecSort(vector <string> &v) {
     auto start = high_resolution_clock::now(); // Starts the timer for sorting vector
-    sort(v.begin(), v.end());
+    sort(v.begin(), v.end()); // Uses sort function from algorithm library.
+    auto end = high_resolution_clock::now();
+    int time = duration_cast < nanoseconds > (end - start).count();
+    return time;
+}
+
+int listSort(list <string> &l) {
+    auto start = high_resolution_clock::now(); // Starts the timer for sorting list
+    l.sort();
+    auto end = high_resolution_clock::now();
+    int time = duration_cast < nanoseconds > (end - start).count();
+    return time;
+}
+
+int vecInsert(vector <string> &v, string word) {
+    auto start = high_resolution_clock::now();
+    v.insert(v.begin() + v.size() / 2, word); // Middle is found by dividing vector.size by 2. Pretty fast.
+    auto end = high_resolution_clock::now();
+    int time = duration_cast < nanoseconds > (end - start).count();
+    return time;
+}
+
+int listInsert(list <string> &l, string word) {
+    auto start = high_resolution_clock::now();
+    auto it_list = l.begin();
+    advance(it_list, l.size() / 2); // Move the iterator to the middle of the list. Slower since it moves from beginning to middle.
+    l.insert(it_list, word);
+    auto end = high_resolution_clock::now();
+    int time = duration_cast < nanoseconds > (end - start).count();
+    return time;
+}
+
+int setInsert(set <string> &s, string word) {
+    auto start = high_resolution_clock::now();
+    s.insert(word);
     auto end = high_resolution_clock::now();
     int time = duration_cast < nanoseconds > (end - start).count();
     return time;
